@@ -45,12 +45,10 @@ class Graph:
                 #       DO THE THING!
                 print(vertex)
                 visited.add(vertex)
-                
         #       For each edge in the item
                 for next_vert in self.get_neighbors(vertex):
                     #           Add that edge to the queue/stack
                     queue.enqueue(next_vert)
-
     def dft(self, starting_vertex):
         """
         Print each vertex in depth-first order
@@ -62,6 +60,8 @@ class Graph:
         stack.push(starting_vertex)
         # Make a set to keep track of where we've been
         visited = set()
+        answer = []
+        i = 0
         # While there is stuff in the queue/stack
         while stack.size() > 0:
             #    Pop the first item
@@ -69,31 +69,28 @@ class Graph:
         #    If not visited
             if vertex not in visited:
                 #       DO THE THING!
-                print(vertex)
                 visited.add(vertex)
                 
+                answer.append((vertex, i))
         #       For each edge in the item
                 for next_vert in self.get_neighbors(vertex):
                     #           Add that edge to the queue/stack
                     stack.push(next_vert)
-
-    
+                    i += 1
+        return answer
     def dft_recursive(self, starting_vertex, visited=None):
         """
         Print each vertex in depth-first order
         beginning from starting_vertex.
-
         This should be done using recursion.
         """
         if visited is None:
             visited = set()
         visited.add(starting_vertex)
         print(starting_vertex)
-        
         for child_vert in self.vertices[starting_vertex]:
             if child_vert not in visited:
                 self.dft_recursive(child_vert, visited)
-
     def bfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing the shortest path from
@@ -112,7 +109,6 @@ class Graph:
             #    Pop the first item
             path = queue.dequeue()
             vertex = path[-1]
-            
         #    If not visited
             if vertex not in visited:
                 if vertex == destination_vertex:
@@ -126,7 +122,6 @@ class Graph:
                     new_path = list(path)
                     new_path.append(next_vert)
                     queue.enqueue(new_path)
-
     def dfs(self, starting_vertex, destination_vertex):
         """
         Return a list containing a path from
@@ -145,7 +140,6 @@ class Graph:
             #    Pop the first item
             path = stack.pop()
             vertex = path[-1]
-            
         #    If not visited
             if vertex not in visited:
                 if vertex == destination_vertex:
@@ -159,8 +153,6 @@ class Graph:
                     new_path = list(path)
                     new_path.append(next_vert)
                     stack.push(new_path)
-
-    
     def dfs_recursive(self, starting_vertex, destination_vertex, visited=None, path=None):
         """
         Return a list containing a path from
@@ -168,7 +160,6 @@ class Graph:
         depth-first order.
         This should be done using recursion.
         """
-        
         if visited is None:
             visited = set()
         if path is None:
@@ -184,76 +175,3 @@ class Graph:
                 if new_path:
                     return new_path
         return None
-
-
-if __name__ == '__main__':
-    graph = Graph()  # Instantiate your graph
-    # https://github.com/LambdaSchool/Graphs/blob/master/objectives/breadth-first-search/img/bfs-visit-order.png
-    graph.add_vertex(1)
-    graph.add_vertex(2)
-    graph.add_vertex(3)
-    graph.add_vertex(4)
-    graph.add_vertex(5)
-    graph.add_vertex(6)
-    graph.add_vertex(7)
-    graph.add_edge(5, 3)
-    graph.add_edge(6, 3)
-    graph.add_edge(7, 1)
-    graph.add_edge(4, 7)
-    graph.add_edge(1, 2)
-    graph.add_edge(7, 6)
-    graph.add_edge(2, 4)
-    graph.add_edge(3, 5)
-    graph.add_edge(2, 3)
-    graph.add_edge(4, 6)
-    '''
-    Should print:
-        {1: {2}, 2: {3, 4}, 3: {5}, 4: {6, 7}, 5: {3}, 6: {3}, 7: {1, 6}}
-    '''
-    print("__________: 1")
-    print(graph.vertices)
-    print("__________: 2")
-    print(graph.get_neighbors(5))
-    '''
-    Valid BFT paths:
-        1, 2, 3, 4, 5, 6, 7
-        1, 2, 3, 4, 5, 7, 6
-        1, 2, 3, 4, 6, 7, 5
-        1, 2, 3, 4, 6, 5, 7
-        1, 2, 3, 4, 7, 6, 5
-        1, 2, 3, 4, 7, 5, 6
-        1, 2, 4, 3, 5, 6, 7
-        1, 2, 4, 3, 5, 7, 6
-        1, 2, 4, 3, 6, 7, 5
-        1, 2, 4, 3, 6, 5, 7
-        1, 2, 4, 3, 7, 6, 5
-        1, 2, 4, 3, 7, 5, 6
-    '''
-    print("__________: 3")
-    graph.bft(1)
-    '''
-    Valid DFT paths:
-        1, 2, 3, 5, 4, 6, 7
-        1, 2, 3, 5, 4, 7, 6
-        1, 2, 4, 7, 6, 3, 5
-        1, 2, 4, 6, 3, 5, 7
-    '''
-    print("__________: 4")
-    graph.dft(1)
-    print("__________: 5")
-    graph.dft_recursive(1)
-    '''
-    Valid BFS path:
-        [1, 2, 4, 6]
-    '''
-    print("__________: 6")
-    print(graph.bfs(1, 6))
-    '''
-    Valid DFS paths:
-        [1, 2, 4, 6]
-        [1, 2, 4, 7, 6]
-    '''
-    print("__________: 7")
-    print(graph.dfs(1, 6))
-    print("__________: 8")
-    print(graph.dfs_recursive(1, 6))
